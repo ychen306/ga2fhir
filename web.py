@@ -53,6 +53,7 @@ def load(): # load appropriate data from GA4GH
             'end': coord['pos'], 
             'genomeBuild': {'text': 'GRCh37'},
             'type': 'DNA',
+            'source': {'text': 'somatic'},
             'patient': {'reference': '/Patient/%s' % pid},
             'variation': {'text': rsid},
             'species': {'text': 'Homo sapiens'},
