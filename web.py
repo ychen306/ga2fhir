@@ -48,24 +48,21 @@ def load(): # load appropriate data from GA4GH
         interp = 'positive' if float(snps.DATA[rsid]['Risk']) > 1 else 'negative'
         seq = {
             'resourceType': 'Sequence',
-            'chromosome': {'text': coord['chromosome']},
-            'start': coord['pos']-1,
-            'end': coord['pos'], 
-            'genomeBuild': {'text': 'GRCh37'},
-            'type': 'DNA',
-            'source': {'text': 'somatic'},
-            'patient': {'reference': '/Patient/%s' % pid},
+            'type': DNA,
+            'coordinate': [
+                   {"start": coord['pos']-1,
+                   "end": coord['pos'], 
+                   "chromosome": {'text': coord['chromosome']},
+                   "genomeBuild": {'text': 'GRCh37'},
+                   }],
             'variation': {'text': rsid},
             'species': {'text': 'Homo sapiens'},
-            'analysis': [{
-                'target': {'text': snps.DATA[rsid]['disease']},
-                'type': {'text': 'Disease Risk Analysis'},
-                'interpretation': {'text': interp},
-                'confidence': 'reviewing'
-            }],
-            'gaRepository': ga4gh.REPOSITORIES['google'],
-            'gaVariantSet': variantset_ids,
-            'gaCallSet': callset_id
+            "repository": [
+                   {
+                   "url": "https://www.googleapis.com/genomics/v1beta2",
+                   "variantId": variantset_ids
+                   }
+                   ]
         }
         uploads.append(gevent.spawn(upload_seq, seq, session['access_token']))
     for g in uploads:
